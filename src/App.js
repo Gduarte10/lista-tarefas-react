@@ -1,23 +1,50 @@
-import logo from './logo.svg';
 import './App.css';
+import ListaDeTarefas from './components/ListaDeTarefas';
+import Footer from './components/Footer';
+import Header from './components/Header';
+import { useState } from 'react';
+import Formulario from './components/Formulario';
 
-function App() {
+const App= () => {
+  const [tarefas, setTarefas] = useState([
+    { id: 1, texto: 'Estudar React' },
+    { id: 2, texto: 'Tomar café' },
+    { id: 3, texto: 'Resolver exercícios' }
+  ]);
+
+  const [editandoId, setEditandoId] = useState(null);
+
+  const adicionarTarefa = (texto) => {
+    const novaTarefa = { id: Date.now(), texto };
+    setTarefas([...tarefas, novaTarefa]);
+  };
+
+  const removerTarefa = (id) => {
+    setTarefas(tarefas.filter(tarefa => tarefa.id !== id));
+  };
+
+  const iniciarEdicao = (id, novoTexto) => {
+    setTarefas(tarefas.map(t => (t.id === id ? {...t, texto: novoTexto} : t)));
+    setEditandoId(null);
+  };
+
+  const salvarEdicao = (id, novoTexto) => {
+    setTarefas(tarefas.map(t => (t.id === id ? {...t, texto: novoTexto} : t)));
+    setEditandoId(null);
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='container-sm mt-4'>
+      <Header />
+      <Formulario adicionarTarefa={adicionarTarefa} />
+      <ListaDeTarefas
+      tarefas={tarefas}
+      removerTarefa={removerTarefa}
+      editandoId={editandoId}
+      iniciarEdicao={iniciarEdicao}
+      salvarEdicao={salvarEdicao}
+      />
+      <Footer />
     </div>
   );
 }
